@@ -24,12 +24,14 @@ use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Toggle;
-
+use Filament\Forms\Components\FileUpload;
 class ProductComponentResource extends Resource
 {
     protected static ?string $model = ProductComponent::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
+    protected static ?string $navigationGroup = 'Inventory Management';
+    protected static ?string $navigationLabel = 'Product component';
 
     public static function form(Form $form): Form
     {

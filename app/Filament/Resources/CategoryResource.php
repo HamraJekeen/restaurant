@@ -18,6 +18,12 @@ use Illuminate\Support\Str;
 use Filament\Forms\Components\TextInput\TextInputMask;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\FileUpload; 
+use Filament\Forms\Components\Select;
+
+use Filament\Forms\Components\Section; 
+use Filament\Forms\Components\Grid;
+
 
 class CategoryResource extends Resource
 {
@@ -32,25 +38,33 @@ class CategoryResource extends Resource
         return $form
             ->schema([
                 //
-                TextInput::make('name')
-                    ->required()
-                    ->maxlength(255)
-                    ->live(onBlur:true)
-                    ->afterStateUpdated(fn(string $operation , $state, Set $set) =>
-                    $operation==='create'? $set ('slug', Str::Slug($state)):null),
+                Section::make([
+                    Grid::make()
+                    ->schema([
+                        TextInput::make('name')
+                        ->required()
+                        ->maxlength(255)
+                        ->live(onBlur:true)
+                        ->afterStateUpdated(fn(string $operation , $state, Set $set) =>
+                        $operation==='create'? $set ('slug', Str::Slug($state)):null),
+    
+                        TextInput::make('slug')
+                        ->disabled()
+                        ->required()
+                        ->maxlength(255)
+                        ->dehydrated()
+                        ->unique(Category::class, 'slug', ignoreRecord: true),
+                    ]),
+                    FileUpload::make('image')
+                    ->image()
+                    ->directory('categories'),
 
-                TextInput::make('slug')
-                    ->disabled()
+    
+                    Toggle::make('is_active')
                     ->required()
-                    ->maxlength(255)
-                    ->dehydrated()
-                    ->unique(Category::class, 'slug', ignoreRecord: true),
-
-                Toggle::make('is_active')
-                    ->label('Active')
-                    ->required()
-                    ->default(true)
-                    ->helperText('Toggle to activate or deactivate the category'),
+                    ->default(true),
+                   ])
+    
                 ]);
     }
 
@@ -61,7 +75,7 @@ class CategoryResource extends Resource
                 //
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                
+                Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
                 

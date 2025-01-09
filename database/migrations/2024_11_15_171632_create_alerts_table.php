@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('alert_type');
             $table->string('alert_message');
             $table->foreignId('inventory_id')->constrained('inventories')->onDelete('cascade');
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
     }

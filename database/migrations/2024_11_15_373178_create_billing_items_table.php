@@ -11,14 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
+        
         Schema::create('billing_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('bill_id')->constrained('billing_systems')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->integer('order_quantity'); // Quantity of this product in the bill
-            $table->decimal('item_amount', 10, 2); // Amount for this item
+            $table->integer('order_quantity');
+            $table->decimal('unit_price', 10, 2);
+            $table->decimal('extra_price', 10, 2)->default(0);
+            $table->text('description')->nullable();
+            $table->decimal('total_price', 10, 2);
             $table->timestamps();
-        });
+        }); 
     }
 
     /**

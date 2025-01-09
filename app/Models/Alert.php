@@ -24,11 +24,22 @@ class Alert extends Model
         'alert_type',
         'alert_message',
         'inventory_id',
+        'is_read'
+    ];
+
+    protected $casts = [
+        'is_read' => 'boolean'
     ];
 
     // Define the relationship to the Inventory model
     public function inventory()
     {
         return $this->belongsTo(Inventory::class, 'inventory_id', 'id');
+    }
+
+    public function markAsRead()
+    {
+        $this->is_read = true;
+        $this->save();
     }
 }

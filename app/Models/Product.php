@@ -16,6 +16,7 @@ class Product extends Model
     protected $fillable = [
         'product_name',
         'category_id',
+        'image',
         'price',
     ];
 
@@ -57,8 +58,7 @@ class Product extends Model
     public function inventories()
     {
         return $this->belongsToMany(Inventory::class, 'product_components', 'product_id', 'inventory_id')
-                    ->withPivot('quantity_required')
-                    ->withTimestamps();
+                    ->withPivot('quantity_required');
     }
     
 }

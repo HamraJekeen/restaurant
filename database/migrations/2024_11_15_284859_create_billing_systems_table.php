@@ -16,7 +16,6 @@ return new class extends Migration
             $table->date('bill_date');
             $table->time('bill_time');
             $table->decimal('total_amount', 10, 2)->nullable(); // Store the total amount for the bill
-
             $table->timestamps();
         });
     }

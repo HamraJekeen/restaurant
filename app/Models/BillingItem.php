@@ -7,39 +7,41 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class BillingItem extends Model
 {
-    //
     use HasFactory;
-
-    protected $primaryKey = 'id';
 
     protected $fillable = [
         'bill_id',
         'product_id',
         'order_quantity',
-        'item_amount',
+        'unit_price',
+        'extra_price',
+        'description',
+        'total_price',
     ];
 
-    /**
-     * Define relationship with Product
-     */
-    public function product()
+    protected $casts = [
+        'total_price' => 'decimal:2',
+        'unit_price' => 'decimal:2',
+        'extra_price' => 'decimal:2',
+    ];
+
+    protected static function booted()
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        static::created(function ($billingItem) {
+            // Update the bill's total amount when a new item is added
+            $bill = $billingItem->bill;
+            $totalAmount = $bill->billingItems->sum('total_price');
+            $bill->update(['total_amount' => $totalAmount]);
+        });
     }
 
-    /**
-     * Define relationship with BillingSystem
-     */
     public function bill()
     {
         return $this->belongsTo(BillingSystem::class, 'bill_id');
     }
-    public function calculateItemAmount()
+
+    public function product()
     {
-        $product = $this->product;
-        if ($product) {
-            $this->item_amount = $product->price * $this->order_quantity;
-            $this->save();
-        }
+        return $this->belongsTo(Product::class);
     }
 }

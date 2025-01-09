@@ -41,14 +41,14 @@ class InventoryResource extends Resource
             TextInput::make('inventory_quantity')
                 ->label('Inventory Quantity')
                 ->required()
-                ->numeric() // Ensures only numbers are allowed
-                ->rule('min:0'), // Min validation for numeric input
+                ->numeric()
+                ->rules(['min:0', 'max:200']),
 
             TextInput::make('trigger_level')
                 ->label('Trigger Level')
                 ->required()
-                ->numeric() // Ensures only numbers are allowed
-                ->rule('min:0'), // Min validation for numeric input
+                ->numeric()
+                ->rules(['min:0', 'max:200']),
 
             TextInput::make('inventory_price')
                 ->label('Inventory Price')
